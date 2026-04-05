@@ -1,18 +1,20 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
-const app = express();
 const cors = require("cors");
-const port = process.env.PORT || 3000;
+const app = express();
+const port = 3000;
+const dns = require("dns");
 
-// Middle Ware
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// simpleDbUser
-// lSmot0yqr5d09T6T
+// Force Google DNS
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const uri =
-  "mongodb+srv://simpleDbUser:lSmot0yqr5d09T6T@cluster0.ab3rgue.mongodb.net/?appName=Cluster0";
+  "mongodb+srv://simpleDbUser:xoTdIamyidcBXmNR@cluster0.ab3rgue.mongodb.net/?appName=Cluster0";
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -24,19 +26,20 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
+
     await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+    console.log("Successfully connected to MongoDB!");
   } finally {
-    // No need to write here yet
+    // await client.close();
   }
 }
-
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
-  res.send("Simple CRUD running");
+  res.send("Hello World!");
 });
 
 app.listen(port, () => {
-  console.log(`Simple CRUD is running on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });
