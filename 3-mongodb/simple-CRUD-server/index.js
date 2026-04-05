@@ -2,7 +2,7 @@ const { MongoClient, ServerApiVersion } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 5000;
 const dns = require("dns");
 
 // Middleware
@@ -27,13 +27,23 @@ async function run() {
   try {
     await client.connect();
 
-    await client.db("admin").command({ ping: 1 });
+    const usersDB = client.db("usersDB");
+    const usersCollection = usersDB.collection("users");
 
+    // Add databse related APIs here
+    app.post("/users", async (req, res) => {
+      const newUser = req.body;
+      const result = await usersCollection.insertOne(newUser);
+      res.send(result);
+    });
+
+    await client.db("admin").command({ ping: 1 });
     console.log("Successfully connected to MongoDB!");
   } finally {
     // await client.close();
   }
 }
+
 run().catch(console.dir);
 
 app.get("/", (req, res) => {
