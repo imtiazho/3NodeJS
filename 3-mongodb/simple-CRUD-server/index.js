@@ -31,6 +31,12 @@ async function run() {
     const usersCollection = usersDB.collection("users");
 
     // Add databse related APIs here
+    app.get('/users', async (req, res) => {
+      const cursor = usersCollection.find({});
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
     app.post("/users", async (req, res) => {
       const newUser = req.body;
       const result = await usersCollection.insertOne(newUser);
