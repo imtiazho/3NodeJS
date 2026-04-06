@@ -1,9 +1,24 @@
 import React, { use, useState } from "react";
+import { Link } from "react-router";
 
 const Users = ({ userPromise }) => {
   const initialUsers = use(userPromise);
-  console.log(initialUsers);
   const [users, setUser] = useState(initialUsers);
+
+  const handleDeleteUser = (id) => {
+    fetch(`http://localhost:5000/users/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("After delete", data);
+        if (data.deletedCount) {
+          const remaining = users.filter((user) => user._id !== id);
+          setUser(remaining);
+          alert("Delete users")
+        }
+      });
+  };
 
   const handleForm = (e) => {
     e.preventDefault();
@@ -34,7 +49,7 @@ const Users = ({ userPromise }) => {
 
   return (
     <div>
-      Users
+      Users : {users.length}
       <form onSubmit={handleForm}>
         <input type="text" name="name" />
         <br />
@@ -48,7 +63,9 @@ const Users = ({ userPromise }) => {
         {users.map((user) => (
           <div key={user._id}>
             <p>{user?.name}</p>
-            <button>X</button>
+            <button onClick={() => handleDeleteUser(user._id)}>X</button>
+            <Link to={`users/${user._id}`}>Deatils</Link> <br />
+            <Link to={`update/${user._id}`}>Edit</Link>
           </div>
         ))}
       </div>

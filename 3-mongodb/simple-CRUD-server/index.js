@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -31,15 +31,41 @@ async function run() {
     const usersCollection = usersDB.collection("users");
 
     // Add databse related APIs here
-    app.get('/users', async (req, res) => {
+    app.get("/users", async (req, res) => {
       const cursor = usersCollection.find({});
       const result = await cursor.toArray();
       res.send(result);
-    })
+    });
+
+    app.get("/users/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await usersCollection.findOne(query);
+      res.send(result);
+    });
 
     app.post("/users", async (req, res) => {
       const newUser = req.body;
       const result = await usersCollection.insertOne(newUser);
+      res.send(result);
+    });
+
+    app.patch("/users/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const updateedUser = req.body;
+      const update = {
+        $set: {
+          name: updateedUser.name,
+          email: updateedUser.email,
+        },
+      };
+      const options = {};
+      const result = await usersCollection.updateOne(query, update, options);
+      res.send(result);
+    });
+
+    app.delete("/users/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await usersCollection.deleteOne(query);
       res.send(result);
     });
 
