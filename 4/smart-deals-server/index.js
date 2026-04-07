@@ -35,7 +35,20 @@ async function run() {
     const productsCollections = db.collection("products");
 
     app.get("/products", async (req, res) => {
-      const cursor = productsCollections.find();
+      const projectsField = {
+        _id: 0,
+        title: 1,
+        price_min: 1,
+        price_max: 1,
+        image: 1,
+      };
+      const cursor = productsCollections
+        .find()
+        .sort({ price_min: 1 })
+        .skip(2)
+        .limit(5)
+        .project(projectsField); // Sort for ascending order and skip for skip the products among the products and limit for quantity of Data and project for only specify the field which i only want
+      // const cursor = productsCollections.find().sort({price_min : -1}); // For descending order
       const result = await cursor.toArray();
       res.send(result);
     });
