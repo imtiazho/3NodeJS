@@ -33,22 +33,28 @@ async function run() {
 
     const db = client.db("smart_db");
     const productsCollections = db.collection("products");
+    const bidsCollections = db.collection("bids");
 
     app.get("/products", async (req, res) => {
-      const projectsField = {
-        _id: 0,
-        title: 1,
-        price_min: 1,
-        price_max: 1,
-        image: 1,
-      };
-      const cursor = productsCollections
-        .find()
-        .sort({ price_min: 1 })
-        .skip(2)
-        .limit(5)
-        .project(projectsField); // Sort for ascending order and skip for skip the products among the products and limit for quantity of Data and project for only specify the field which i only want
+      //   const projectsField = {
+      //     _id: 0,
+      //     title: 1,
+      //     price_min: 1,
+      //     price_max: 1,
+      //     image: 1,
+      //   };
+      //   const cursor = productsCollections
+      //     .find()
+      //     .sort({ price_min: 1 })
+      //     .skip(2)
+      //     .limit(5)
+      //     .project(projectsField); // Sort for ascending order and skip for skip the products among the products and limit for quantity of Data and project for only specify the field which i only want
       // const cursor = productsCollections.find().sort({price_min : -1}); // For descending order
+      const query = {};
+      if (req.query.email) {
+        query.email = req.query.email;
+      }
+      const cursor = productsCollections.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -85,6 +91,29 @@ async function run() {
       const result = await productsCollections.deleteOne(query);
       res.send(result);
     });
+
+    // Bids related APIs
+    app.get("/bids", async (req, res) => {
+      const email = req.query.email;
+      const query = {};
+      if (email) {
+        query.buyer_email = email;
+      }
+
+      const cursor = bidsCollections.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.post("/bids", async (req, res) => {
+      const newBid = req.body;
+      const result = await bidsCollections.insertOne(newBid);
+      res.send(result);
+    });
+
+    // app.delete('/bids/:id', async (req, res)=> {
+
+    // })
 
     await client.db("admin").command({ ping: 1 });
     console.log(
