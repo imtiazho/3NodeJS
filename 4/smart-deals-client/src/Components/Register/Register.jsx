@@ -1,10 +1,48 @@
-import React from 'react';
-import { FcGoogle } from 'react-icons/fc';
+import React, { use } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { AuthContext } from "../../Context/AuthContext";
+import { useLocation, useNavigate } from "react-router";
 
 const Register = () => {
-    const handleRegister = (e) => {
+  const { signInWithGoogle } = use(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleRegister = (e) => {
     e.preventDefault();
-    // Handle registration logic here
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const photo = e.target.photo.value;
+    const password = e.target.password.value;
+  };
+
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+      .then((res) => {
+        // console.log(res);
+        const newUser = {
+          name: res.user.displayName,
+          email: res.user.email,
+          image: res.user.photoURL,
+        };
+
+        // Add to database
+        fetch("http://localhost:5000/users", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(newUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            navigate(`${location.state ? location.state : "/"}`);
+            console.log("Data after user save", data);
+          });
+      })
+      .then((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -14,7 +52,7 @@ const Register = () => {
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-slate-800">Register Now!</h2>
           <p className="text-sm mt-2 text-gray-600">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <span className="text-[#9F62F2] font-semibold cursor-pointer hover:underline">
               Login Now
             </span>
@@ -30,6 +68,7 @@ const Register = () => {
             </label>
             <input
               type="text"
+              name="name"
               placeholder="Mariam Swarna"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -43,6 +82,7 @@ const Register = () => {
             </label>
             <input
               type="email"
+              name="email"
               placeholder="example@gmail.com"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -52,10 +92,13 @@ const Register = () => {
           {/* Image-URL Field */}
           <div className="form-control">
             <label className="label py-1">
-              <span className="label-text font-bold text-gray-700">Image-URL</span>
+              <span className="label-text font-bold text-gray-700">
+                Image-URL
+              </span>
             </label>
             <input
-              type="url"
+              type="text"
+              name="photo"
               placeholder="https://image-link.com"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -65,10 +108,13 @@ const Register = () => {
           {/* Password Field */}
           <div className="form-control">
             <label className="label py-1">
-              <span className="label-text font-bold text-gray-700">Password</span>
+              <span className="label-text font-bold text-gray-700">
+                Password
+              </span>
             </label>
             <input
               type="password"
+              name="password"
               placeholder="************"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -85,7 +131,10 @@ const Register = () => {
         <div className="divider my-8 text-xs font-bold text-gray-500">OR</div>
 
         {/* Google Registration */}
-        <button className="btn btn-outline w-full border-gray-300 hover:bg-gray-50 hover:text-slate-800 normal-case font-semibold">
+        <button
+          onClick={handleGoogleSignIn}
+          className="btn btn-outline w-full border-gray-300 hover:bg-gray-50 hover:text-slate-800 normal-case font-semibold"
+        >
           <FcGoogle className="text-2xl mr-2" />
           Sign Up With Google
         </button>
