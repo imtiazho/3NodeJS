@@ -24,35 +24,46 @@ const router = createBrowserRouter([
         Component: Home,
       },
       {
-        path: '/all-products',
-        element: <PrivateRoute>
-          <AllProducts></AllProducts>
-        </PrivateRoute> 
+        path: "/all-products",
+        element: (
+          <PrivateRoute>
+            <AllProducts></AllProducts>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/register",
-        Component: Register
+        Component: Register,
       },
       {
         path: "/login",
-        Component: Login
+        Component: Login,
       },
       {
         path: "/my-products",
-        element: <PrivateRoute>
-          <MyProducts></MyProducts>
-        </PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <MyProducts></MyProducts>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/my-bids",
-        element: <PrivateRoute>
-          <MyBids></MyBids>
-        </PrivateRoute>
+        element: (
+          <PrivateRoute>
+            <MyBids></MyBids>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/product-details/:id",
-        loader: ({params}) => fetch(`http://localhost:5000/products/${params.id}`),
-        Component: ProductDetail
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/products/${params.id}`),
+        element: (
+          <PrivateRoute>
+            <ProductDetail></ProductDetail>
+          </PrivateRoute>
+        ),
       },
     ],
   },

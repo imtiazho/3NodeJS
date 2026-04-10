@@ -16,12 +16,16 @@ const ProductDetail = () => {
   };
   console.log(product);
   useEffect(() => {
-    fetch(`http://localhost:5000/bids/byProduct/${productID}`)
+    fetch(`http://localhost:5000/bids/byProduct/${productID}`, {
+      headers: {
+        authorization: `Bearer ${user.accessToken}`
+      }
+    })
       .then((res) => res.json())
       .then((data) => {
         setBids(data);
       });
-  }, [productID]);
+  }, [productID, user]);
 
   const handleBidSubmit = (e) => {
     e.preventDefault();

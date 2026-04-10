@@ -1,5 +1,4 @@
 import React, { use, useEffect, useState } from "react";
-import { useLoaderData } from "react-router";
 import { AuthContext } from "../../Context/AuthContext";
 import Swal from "sweetalert2";
 
@@ -19,7 +18,7 @@ const MyBids = () => {
           console.log(data);
         });
     }
-  }, [user.email, user.accessToken]);
+  }, [user]);
 
   const handleRemoveBid = (id) => {
     Swal.fire({
@@ -88,7 +87,7 @@ const MyBids = () => {
                   <td className="py-4">{bid?.buyer_name}</td>
 
                   {/* Seller Details */}
-                  <td className="py-4">{bid?.email}</td>
+                  <td className="py-4">{bid?.buyer_email}</td>
 
                   {/* Bid Price */}
                   <td className="py-4 font-bold text-[#001d3d]">
