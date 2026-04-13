@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { HiArrowLeft } from "react-icons/hi";
 import BidListForTargetedProduct from "../Components/Shared/NavBar/Individual/BidListForTargetedProduct/BidListForTargetedProduct";
 
@@ -11,6 +11,12 @@ const ProductDetails = () => {
     e.preventDefault();
     bidModalRef.current.close();
   }
+
+  useEffect(() => {
+    window.scrollTo({
+      top: "2rem",
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8 lg:px-24">
       {/* Grid Container */}

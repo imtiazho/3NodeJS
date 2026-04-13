@@ -1,9 +1,21 @@
-import React from 'react';
-import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router';
+import React, { use } from "react";
+import { FcGoogle } from "react-icons/fc";
+import { Link } from "react-router";
+import { AuthContext } from "../../../../../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 
 const Login = () => {
-    const handleSubmit = (e) => {
+  const { googleSignIn } = use(AuthContext);
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
   };
@@ -15,8 +27,11 @@ const Login = () => {
         <div className="text-center mb-6">
           <h2 className="text-3xl font-bold text-slate-800">Login</h2>
           <p className="text-sm mt-2">
-            Don't have an account?{' '}
-            <Link to="/auth/register" className="text-primary cursor-pointer hover:underline">
+            Don't have an account?{" "}
+            <Link
+              to="/auth/register"
+              className="text-primary cursor-pointer hover:underline"
+            >
               Register Now
             </Link>
           </p>
@@ -62,7 +77,7 @@ const Login = () => {
         <div className="divider my-6 text-xs font-bold text-gray-400">OR</div>
 
         {/* Social Login */}
-        <button className="btn btn-outline w-full border-gray-300 hover:bg-gray-50 hover:text-slate-800 normal-case font-semibold">
+        <button onClick={handleGoogleSignIn} className="btn btn-outline w-full border-gray-300 hover:bg-gray-50 hover:text-slate-800 normal-case font-semibold">
           <FcGoogle className="text-xl mr-2" />
           Sign In With Google
         </button>
