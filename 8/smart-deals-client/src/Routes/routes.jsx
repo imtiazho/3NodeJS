@@ -5,6 +5,10 @@ import AllProducts from "../Components/AllProducts/AllProducts";
 import MyProduct from "../Components/Shared/NavBar/Individual/MyProduct/MyProduct";
 import MyBids from "../Components/Shared/NavBar/Individual/MyBids/MyBids";
 import CreateProducts from "../Components/CreateProducts/CreateProducts";
+import AuthLayout from "../Layouts/AuthLayout/AuthLayout";
+import Login from "../Components/Shared/NavBar/Individual/Login/Login";
+import Register from "../Components/Register/Register";
+import ProductDetails from "../ProductDetails/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -42,6 +46,24 @@ const router = createBrowserRouter([
       {
         path: "/create-product",
         Component: CreateProducts,
+      },
+      {
+        path: "/product-details/:id",
+        Component: ProductDetails,
+      }
+    ],
+  },
+  {
+    path: "/auth",
+    Component: AuthLayout,
+    children: [
+      {
+        path: "/auth/login",
+        Component: Login,
+      },
+      {
+        path: "/auth/register",
+        Component: Register,
       },
     ],
   },

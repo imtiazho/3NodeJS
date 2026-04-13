@@ -104,14 +104,14 @@ const NavBar = () => {
       {/* Auth Buttons */}
       <div className="navbar-end gap-3">
         <NavLink
-          to="/login"
-          className="btn btn-outline border-[#9F62F2] text-[#9F62F2] hover:bg-[#9F62F2] hover:border-[#9F62F2] px-6 min-h-0 h-10"
+          to="/auth/login"
+          className="hover:text-white btn btn-outline border-[#9F62F2] text-[#9F62F2] hover:bg-[#9F62F2] hover:border-[#9F62F2] px-6 min-h-0 h-10"
         >
           Login
         </NavLink>
         <NavLink
-          to="/register"
-          className="btn border-none text-white px-6 min-h-0 h-10 bg-gradient-to-r from-[#632EE3] to-[#9F62F2] hover:opacity-90"
+          to="/auth/register"
+          className="hover:text-white btn border-none text-white px-6 min-h-0 h-10 bg-gradient-to-r from-[#632EE3] to-[#9F62F2] hover:opacity-90"
         >
           Register
         </NavLink>
