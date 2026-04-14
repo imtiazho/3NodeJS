@@ -10,6 +10,7 @@ import Login from "../Components/Shared/NavBar/Individual/Login/Login";
 import Register from "../Components/Register/Register";
 import ProductDetails from "../ProductDetails/ProductDetails";
 import PrivateRoute from "../Provider/PrivateRoute/PrivateRoute";
+import Loading from "../Components/Shared/Loading/Loading";
 
 const router = createBrowserRouter([
   {
@@ -24,9 +25,10 @@ const router = createBrowserRouter([
         path: "/all-products",
         loader: () =>
           fetch(
-            "https://raw.githubusercontent.com/imtiazho/JsonData/refs/heads/main/products.json",
+            "http://localhost:5000/all-products",
           ).then((res) => res.json()),
         Component: AllProducts,
+        hydrateFallbackElement: <Loading></Loading>
       },
       {
         path: "/my-products",

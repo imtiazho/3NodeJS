@@ -59,7 +59,7 @@ const MyProduct = () => {
                   </td>
                   <td>
                     <span
-                      className={`badge border-none px-4 py-3 text-xs font-bold ${
+                      className={`w-[100px] badge border-none px-4 py-3 text-xs font-bold ${
                         product.status === "pending"
                           ? "bg-[#ffc107] text-white"
                           : "bg-green-500 text-white"
@@ -78,7 +78,7 @@ const MyProduct = () => {
                       </button>
                       <button
                         disabled={product.status === "sold"}
-                        className="hover:text-white btn btn-sm btn-outline border-green-300 text-green-600 hover:bg-green-600 hover:border-green-600 normal-case px-4 rounded-md"
+                        className="hover:text-white btn btn-sm btn-outline border-green-300 text-green-600 hover:bg-green-600 hover:border-green-600 normal-case px-4 rounded-md]"
                       >
                         Make Sold
                       </button>

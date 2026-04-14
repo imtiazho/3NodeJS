@@ -27,6 +27,7 @@ const Register = () => {
       .then(() => {
         updateUserProfile({ displayName: name, photoURL: photo })
           .then(() => {
+            // Add user to database
             navigate(`${location.state ? location.state : "/"}`);
           })
           .catch((err) => console.log(err));

@@ -4,7 +4,7 @@ import RecentProducts from "../../Components/Shared/NavBar/Individual/RecentProd
 import Footer from "../../Components/Shared/Footer/Footer";
 
 const latestProductPromise = fetch(
-  "https://raw.githubusercontent.com/imtiazho/JsonData/refs/heads/main/products.json",
+  "http://localhost:5000/latest-products",
 ).then((res) => res.json());
 
 const Home = () => {
