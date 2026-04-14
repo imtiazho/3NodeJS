@@ -9,6 +9,7 @@ import AuthLayout from "../Layouts/AuthLayout/AuthLayout";
 import Login from "../Components/Shared/NavBar/Individual/Login/Login";
 import Register from "../Components/Register/Register";
 import ProductDetails from "../ProductDetails/ProductDetails";
+import PrivateRoute from "../Provider/PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,11 @@ const router = createBrowserRouter([
           fetch(
             "https://raw.githubusercontent.com/imtiazho/JsonData/refs/heads/main/products.json",
           ).then((res) => res.json()),
-        Component: MyProduct,
+        element: (
+          <PrivateRoute>
+            <MyProduct></MyProduct>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/my-bids",
@@ -41,16 +46,29 @@ const router = createBrowserRouter([
           fetch(
             "https://raw.githubusercontent.com/imtiazho/JsonData/refs/heads/main/bids.json",
           ).then((res) => res.json()),
-        Component: MyBids,
+        element: (
+          <PrivateRoute>
+            {" "}
+            <MyBids></MyBids>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/create-product",
-        Component: CreateProducts,
+        element: (
+          <PrivateRoute>
+            <CreateProducts></CreateProducts>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/product-details/:id",
-        Component: ProductDetails,
-      }
+        element: (
+          <PrivateRoute>
+            <ProductDetails></ProductDetails>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {

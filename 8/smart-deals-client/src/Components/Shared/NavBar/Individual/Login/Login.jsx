@@ -1,14 +1,17 @@
 import React, { use } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../../../../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 
 const Login = () => {
-  const { googleSignIn } = use(AuthContext);
+  const { googleSignIn, signIn } = use(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
         console.log(res);
+        navigate(`${location.state ? location.state : "/"}`);
       })
       .catch((err) => {
         console.log(err);
@@ -18,6 +21,18 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle login logic here
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+
+    signIn(email, password)
+      .then((res) => {
+        console.log(res);
+        navigate(`${location.state ? location.state : "/"}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log(email, password);
   };
 
   return (
@@ -45,6 +60,7 @@ const Login = () => {
             </label>
             <input
               type="email"
+              name="email"
               placeholder="example@gmail.com"
               className="input input-bordered w-full focus:outline-none focus:border-primary"
               required
@@ -57,6 +73,7 @@ const Login = () => {
             </label>
             <input
               type="password"
+              name="password"
               placeholder="************"
               className="input input-bordered w-full focus:outline-none focus:border-primary"
               required
@@ -77,7 +94,10 @@ const Login = () => {
         <div className="divider my-6 text-xs font-bold text-gray-400">OR</div>
 
         {/* Social Login */}
-        <button onClick={handleGoogleSignIn} className="btn btn-outline w-full border-gray-300 hover:bg-gray-50 hover:text-slate-800 normal-case font-semibold">
+        <button
+          onClick={handleGoogleSignIn}
+          className="btn btn-outline w-full border-gray-300 hover:bg-gray-50 hover:text-slate-800 normal-case font-semibold"
+        >
           <FcGoogle className="text-xl mr-2" />
           Sign In With Google
         </button>

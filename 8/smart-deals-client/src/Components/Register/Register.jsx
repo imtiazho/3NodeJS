@@ -1,14 +1,17 @@
 import React, { use } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 
 const Register = () => {
   const { googleSignIn, createUser, updateUserProfile } = use(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
         console.log(res);
+        navigate(`${location.state ? location.state : "/"}`);
       })
       .catch((err) => console.log(err));
   };
@@ -21,10 +24,10 @@ const Register = () => {
     const password = e.target.password.value;
 
     createUser(email, password)
-      .then((res) => {
+      .then(() => {
         updateUserProfile({ displayName: name, photoURL: photo })
           .then(() => {
-            console.log("User Create Perfectly");
+            navigate(`${location.state ? location.state : "/"}`);
           })
           .catch((err) => console.log(err));
       })
