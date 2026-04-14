@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { AuthContext } from "../../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 
 const Register = () => {
-  const { googleSignIn } = use(AuthContext);
+  const { googleSignIn, createUser, updateUserProfile } = use(AuthContext);
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then((res) => {
@@ -12,9 +12,25 @@ const Register = () => {
       })
       .catch((err) => console.log(err));
   };
+
   const handleRegister = (e) => {
     e.preventDefault();
-    // Handle registration logic here
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const photo = e.target.photo.value;
+    const password = e.target.password.value;
+
+    createUser(email, password)
+      .then((res) => {
+        updateUserProfile({ displayName: name, photoURL: photo })
+          .then(() => {
+            console.log("User Create Perfectly");
+          })
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -43,6 +59,7 @@ const Register = () => {
             </label>
             <input
               type="text"
+              name="name"
               placeholder="Mariam Swarna"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -56,6 +73,7 @@ const Register = () => {
             </label>
             <input
               type="email"
+              name="email"
               placeholder="example@gmail.com"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -70,7 +88,8 @@ const Register = () => {
               </span>
             </label>
             <input
-              type="url"
+              type="text"
+              name="photo"
               placeholder="https://image-link.com"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required
@@ -86,6 +105,7 @@ const Register = () => {
             </label>
             <input
               type="password"
+              name="password"
               placeholder="************"
               className="input input-bordered w-full focus:outline-none focus:border-[#632EE3]"
               required

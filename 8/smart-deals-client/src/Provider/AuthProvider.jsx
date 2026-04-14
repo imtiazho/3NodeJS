@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
+  createUserWithEmailAndPassword,
   getAuth,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
   signOut,
+  updateProfile,
 } from "firebase/auth";
 import { AuthContext } from "../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 import app from "../../firebase.init";
@@ -22,15 +24,25 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, provider);
   };
 
+  const createUser = (email, password) => {
+    return createUserWithEmailAndPassword(auth, email, password);
+  };
+
+  const updateUserProfile = (userInfo) => {
+    return updateProfile(auth.currentUser, userInfo);
+  };
+
   const logOut = () => {
     return signOut(auth);
-  }
+  };
 
   const authInfo = {
     user,
     loading,
     googleSignIn,
-    logOut
+    createUser,
+    updateUserProfile,
+    logOut,
   };
 
   useEffect(() => {
@@ -44,6 +56,7 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
+  console.log(user);
   return <AuthContext value={authInfo}>{children}</AuthContext>;
 };
 
