@@ -9,8 +9,8 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { AuthContext } from "../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 import app from "../../firebase.init";
+import { AuthContext } from "../Context/AuthContext";
 
 const auth = getAuth(app);
 

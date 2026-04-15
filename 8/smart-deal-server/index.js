@@ -30,6 +30,7 @@ async function run() {
     const db = client.db("smart_db");
     const productCollections = db.collection("products");
     const userCollection = db.collection("users");
+    const bidsCollections = db.collection("bids");
 
     // All API will be written here
     // Latest Product
@@ -43,7 +44,12 @@ async function run() {
     });
 
     app.get("/all-products", async (req, res) => {
-      const cursor = productCollections.find().sort({ created_at: -1 });
+      const query = {};
+      if (req.query.email) {
+        query.email = req.query.email;
+      }
+
+      const cursor = productCollections.find(query).sort({ created_at: -1 });
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -62,6 +68,19 @@ async function run() {
         const result = await userCollection.insertOne(newUser);
         res.send(result);
       }
+    });
+
+    // Bids Related API will be written here
+    app.get("/bids", async (req, res) => {
+      const query = {};
+
+      if (req.query.email) {
+        query.buyer_email = req.query.email;
+      }
+
+      const cursor = bidsCollections.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
     });
 
     await client.db("admin").command({ ping: 1 });

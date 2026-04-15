@@ -1,7 +1,7 @@
 import React, { use } from "react";
-import { AuthContext } from "../../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 import Loading from "../../Components/Shared/Loading/Loading";
 import { Navigate, useLocation } from "react-router";
+import { AuthContext } from "../../Context/AuthContext";
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = use(AuthContext);

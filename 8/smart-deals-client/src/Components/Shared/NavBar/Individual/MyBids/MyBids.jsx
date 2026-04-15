@@ -1,10 +1,20 @@
 import React from "react";
-import { useLoaderData } from "react-router";
 import productPlaceHolder from "../../../../../assets/thumbnail-card.png";
 import placeHolderImage from "../../../../../assets/thumb-profile.png";
+import { useState } from "react";
+import { useEffect } from "react";
+import { use } from "react";
+import { AuthContext } from "../../../../../Context/AuthContext";
 
 const MyBids = () => {
-  const bids = useLoaderData();
+  const [bids, setBids] = useState([]);
+  const { user } = use(AuthContext);
+  useEffect(() => {
+    fetch(`http://localhost:5000/bids?email=${user.email}`)
+      .then((res) => res.json())
+      .then((data) => setBids(data));
+  }, [user]);
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen pt-14 pb-20">
       <div className="max-w-7xl mx-auto">

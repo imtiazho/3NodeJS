@@ -32,10 +32,6 @@ const router = createBrowserRouter([
       },
       {
         path: "/my-products",
-        loader: () =>
-          fetch(
-            "https://raw.githubusercontent.com/imtiazho/JsonData/refs/heads/main/products.json",
-          ).then((res) => res.json()),
         element: (
           <PrivateRoute>
             <MyProduct></MyProduct>

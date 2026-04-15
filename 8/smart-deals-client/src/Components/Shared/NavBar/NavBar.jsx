@@ -1,7 +1,7 @@
 import React, { use } from "react";
 import { NavLink } from "react-router";
-import { AuthContext } from "../../../../../../../2-react-second-phase/5-practice-whole-milestone/react-auth-router/src/Context/AuthContext";
 import userIcon from "../../../assets/user.png";
+import { AuthContext } from "../../../Context/AuthContext";
 
 const NavBar = () => {
   const { user, logOut } = use(AuthContext);
