@@ -3,7 +3,7 @@ const cors = require("cors");
 const dns = require("dns");
 const app = express();
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 // Middleware
@@ -33,6 +33,7 @@ async function run() {
     const bidsCollections = db.collection("bids");
 
     // All API will be written here
+    // Products API
     // Latest Product
     app.get("/latest-products", async (req, res) => {
       const cursor = productCollections
@@ -52,6 +53,45 @@ async function run() {
       const cursor = productCollections.find(query).sort({ created_at: -1 });
       const result = await cursor.toArray();
       res.send(result);
+    });
+    // 69de96325788f71379243e66
+    app.get("/products/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await productCollections.findOne(query);
+      res.send(result);
+    });
+
+    app.post("/products", async (req, res) => {
+      const newProduct = req.body;
+      const result = await productCollections.insertOne(newProduct);
+      res.send(result);
+    });
+
+    app.delete("/products/:id", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = await productCollections.deleteOne(query);
+      res.send(result);
+    });
+
+    app.patch("/products/:id", async (req, res) => {
+      const updatedProduct = req.body;
+      const query = { _id: new ObjectId(req.params.id) };
+      const update = {
+        $set: updatedProduct,
+      };
+      const options = {};
+      const result = await productCollections.updateOne(query, update, options);
+      res.send(result);
+    });
+
+    app.patch("/products/:id/status", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const update = {
+        $set: { status: "sold" },
+      };
+      const options = {};
+      const result = await productCollections.updateOne(query, update, options);
+      req.send(result);
     });
 
     // All users API will be written here
@@ -80,6 +120,25 @@ async function run() {
 
       const cursor = bidsCollections.find(query);
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.get("/bids/by-product/:id", async (req, res) => {
+      const query = { product: req.params.id };
+      const cursor = bidsCollections.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    app.post("/bids", async (req, res) => {
+      const newBids = req.body;
+      const result = await bidsCollections.insertOne(newBids);
+      res.send(result);
+    });
+
+    app.delete("/bids/:id", (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const result = bidsCollections.deleteOne(query);
       res.send(result);
     });
 
