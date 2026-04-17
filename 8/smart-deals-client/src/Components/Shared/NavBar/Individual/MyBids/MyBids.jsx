@@ -9,9 +9,18 @@ const MyBids = () => {
   const [bids, setBids] = useState([]);
   const { user } = use(AuthContext);
   useEffect(() => {
-    fetch(`http://localhost:5000/bids?email=${user.email}`)
-      .then((res) => res.json())
-      .then((data) => setBids(data));
+    if (user?.email) {
+      fetch(`http://localhost:5000/bids?email=${user.email}`, {
+        headers: {
+          authorization: `Bearer ${user.accessToken}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setBids(data);
+          console.log(data);
+        });
+    }
   }, [user]);
 
   const handleCancel = (bidId) => {

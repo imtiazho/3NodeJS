@@ -5,10 +5,36 @@ const app = express();
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
+const admin = require("firebase-admin");
+
+const serviceAccount = require("./serviceAccountKey.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+const verifyFireBaseToken = async (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: "Unauthorize Access" });
+  }
+  const token = req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorize Access" });
+  }
+
+  // Verify Token
+  try {
+    const userInfo = await admin.auth().verifyIdToken(token);
+    req.token_email = userInfo.email;
+    next();
+  } catch {
+    return res.status(401).send({ message: "Unauthorize Access" });
+  }
+};
 
 // Force Google DNS
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -93,7 +119,6 @@ async function run() {
       const result = await productCollections.updateOne(query, update, options);
       res.send(result);
     });
-    
 
     // All users API will be written here
     app.post("/users", async (req, res) => {
@@ -112,10 +137,14 @@ async function run() {
     });
 
     // Bids Related API will be written here
-    app.get("/bids", async (req, res) => {
+    app.get("/bids", verifyFireBaseToken, async (req, res) => {
       const query = {};
 
       if (req.query.email) {
+        if (req.query.email !== req.token_email) {
+          return res.status(401).send({ message: "Unauthorize Access" });
+        }
+        
         query.buyer_email = req.query.email;
       }
 
