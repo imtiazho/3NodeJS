@@ -1,7 +1,7 @@
 import React, { use } from "react";
 import { NavLink } from "react-router";
 import userIcon from "../../../assets/user.png";
-import { AuthContext } from "../../../Context/AuthContext";
+import AuthContext from "../../../Context/AuthContext";
 
 const NavBar = () => {
   const { user, logOut } = use(AuthContext);
@@ -10,6 +10,7 @@ const NavBar = () => {
       console.log("SignOut User");
     });
   };
+
   const links = (
     <>
       <li>

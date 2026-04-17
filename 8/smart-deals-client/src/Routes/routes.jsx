@@ -24,11 +24,9 @@ const router = createBrowserRouter([
       {
         path: "/all-products",
         loader: () =>
-          fetch(
-            "http://localhost:5000/all-products",
-          ).then((res) => res.json()),
+          fetch("http://localhost:5000/all-products").then((res) => res.json()),
         Component: AllProducts,
-        hydrateFallbackElement: <Loading></Loading>
+        hydrateFallbackElement: <Loading></Loading>,
       },
       {
         path: "/my-products",
@@ -61,6 +59,10 @@ const router = createBrowserRouter([
       },
       {
         path: "/product-details/:id",
+        loader: ({ params }) =>
+          fetch(`http://localhost:5000/products/${params.id}`).then((res) =>
+            res.json(),
+          ),
         element: (
           <PrivateRoute>
             <ProductDetails></ProductDetails>

@@ -10,7 +10,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import app from "../../firebase.init";
-import { AuthContext } from "../Context/AuthContext";
+import AuthContext from "../Context/AuthContext";
 
 const auth = getAuth(app);
 
@@ -21,7 +21,6 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState();
 
   const googleSignIn = () => {
-    setLoading(true);
     return signInWithPopup(auth, provider);
   };
 
@@ -66,8 +65,8 @@ const AuthProvider = ({ children }) => {
     };
   }, []);
 
-  console.log(user);
-  return <AuthContext value={authInfo}>{children}</AuthContext>;
+  
+  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

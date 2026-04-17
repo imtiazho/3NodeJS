@@ -1,7 +1,7 @@
 import React, { use } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useLocation, useNavigate } from "react-router";
-import { AuthContext } from "../../Context/AuthContext";
+import AuthContext from "../../Context/AuthContext";
 
 const Register = () => {
   const { googleSignIn, createUser, updateUserProfile } = use(AuthContext);

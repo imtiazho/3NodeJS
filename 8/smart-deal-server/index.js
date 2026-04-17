@@ -54,7 +54,7 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
-    // 69de96325788f71379243e66
+
     app.get("/products/:id", async (req, res) => {
       const query = { _id: new ObjectId(req.params.id) };
       const result = await productCollections.findOne(query);
@@ -91,8 +91,9 @@ async function run() {
       };
       const options = {};
       const result = await productCollections.updateOne(query, update, options);
-      req.send(result);
+      res.send(result);
     });
+    
 
     // All users API will be written here
     app.post("/users", async (req, res) => {
@@ -125,7 +126,7 @@ async function run() {
 
     app.get("/bids/by-product/:id", async (req, res) => {
       const query = { product: req.params.id };
-      const cursor = bidsCollections.find(query);
+      const cursor = bidsCollections.find(query).sort({ bid_price: -1 });
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -136,9 +137,19 @@ async function run() {
       res.send(result);
     });
 
-    app.delete("/bids/:id", (req, res) => {
+    app.delete("/bids/:id", async (req, res) => {
       const query = { _id: new ObjectId(req.params.id) };
-      const result = bidsCollections.deleteOne(query);
+      const result = await bidsCollections.deleteOne(query);
+      res.send(result);
+    });
+
+    app.patch("/bids/:id/status", async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) };
+      const update = {
+        $set: { status: "confirmed" },
+      };
+      const options = {};
+      const result = await bidsCollections.updateOne(query, update, options);
       res.send(result);
     });
 

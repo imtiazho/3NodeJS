@@ -1,14 +1,67 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
+import Swal from "sweetalert2";
+import AuthContext from "../../Context/AuthContext";
 
 const CreateProducts = () => {
+  const { user } = use(AuthContext);
   const [condition, setCondition] = useState("brand-new");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logic to handle form data
-    console.log("Product Created");
+    const title = e.target.title.value;
+    const category = e.target.category.value;
+    const minPrice = e.target.minPrice.value;
+    const maxPrice = e.target.maxPrice.value;
+    const CurrCondition = condition;
+    const usage = e.target.usageTime.value;
+    const time = new Date().toISOString();
+    const proPhoto = e.target.photo.value;
+    const name = e.target.name.value;
+    const email = e.target.email.value;
+    const contact = e.target.contact.value;
+    const sellerImage = e.target.sellerImage.value;
+    const location = e.target.location.value;
+    const description = e.target.description.value;
+
+    const newProduct = {
+      title: title,
+      price_min: minPrice,
+      price_max: maxPrice,
+      email: email,
+      category: category,
+      created_at: time,
+      image: proPhoto,
+      status: "pending",
+      location: location,
+      seller_image: sellerImage,
+      seller_name: name,
+      condition: CurrCondition,
+      usage: usage,
+      description: description,
+      seller_contact: contact,
+    };
+
+    // Add to database
+    fetch("http://localhost:5000/products", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          Swal.fire({
+            title: "Posted",
+            text: "Your bid has been placed!",
+            icon: "success",
+          });
+        }
+      });
   };
 
   return (
@@ -37,6 +90,7 @@ const CreateProducts = () => {
                 </label>
                 <input
                   type="text"
+                  name="title"
                   placeholder="e.g. Yamaha Fz Guitar for Sale"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -50,13 +104,16 @@ const CreateProducts = () => {
                     Category
                   </span>
                 </label>
-                <select className="select select-bordered w-full focus:outline-[#8b5cf6] font-normal text-gray-400">
+                <select
+                  name="category"
+                  className="select select-bordered w-full focus:outline-[#8b5cf6] font-normal text-gray-400"
+                >
                   <option disabled selected>
                     Select a Category
                   </option>
-                  <option>Furniture</option>
-                  <option>Electronics</option>
-                  <option>Vehicles</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Vehicles">Vehicles</option>
                 </select>
               </div>
 
@@ -68,7 +125,8 @@ const CreateProducts = () => {
                   </span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
+                  name="minPrice"
                   placeholder="e.g. 18.5"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -83,7 +141,8 @@ const CreateProducts = () => {
                   </span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
+                  name="maxPrice"
                   placeholder="Optional (default = Min Price)"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                 />
@@ -133,6 +192,7 @@ const CreateProducts = () => {
                 </label>
                 <input
                   type="text"
+                  name="usageTime"
                   placeholder="e.g. 1 year 3 month"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                 />
@@ -146,7 +206,8 @@ const CreateProducts = () => {
                   </span>
                 </label>
                 <input
-                  type="url"
+                  type="text"
+                  name="photo"
                   placeholder="https://..."
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -162,6 +223,8 @@ const CreateProducts = () => {
                 </label>
                 <input
                   type="text"
+                  name="name"
+                  defaultValue={user.displayName}
                   placeholder="e.g. Artisan Roasters"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -177,6 +240,8 @@ const CreateProducts = () => {
                 </label>
                 <input
                   type="email"
+                  name="email"
+                  defaultValue={user.email}
                   placeholder="leli31955@nrlord.com"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -192,6 +257,7 @@ const CreateProducts = () => {
                 </label>
                 <input
                   type="text"
+                  name="contact"
                   placeholder="e.g. +1-555-1234"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -206,7 +272,9 @@ const CreateProducts = () => {
                   </span>
                 </label>
                 <input
-                  type="url"
+                  type="text"
+                  name="sellerImage"
+                  defaultValue={user.photoURL}
                   placeholder="https://..."
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -222,6 +290,7 @@ const CreateProducts = () => {
                 </label>
                 <input
                   type="text"
+                  name="location"
                   placeholder="City, Country"
                   className="input input-bordered w-full focus:outline-[#8b5cf6]"
                   required
@@ -238,6 +307,7 @@ const CreateProducts = () => {
                   </span>
                 </label>
                 <textarea
+                  name="description"
                   className="textarea textarea-bordered h-32 w-full focus:outline-[#8b5cf6]"
                   placeholder="e.g. I bought this product 3 month ago..."
                 ></textarea>
