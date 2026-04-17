@@ -12,7 +12,8 @@ const MyBids = () => {
     if (user?.email) {
       fetch(`http://localhost:5000/bids?email=${user.email}`, {
         headers: {
-          authorization: `Bearer ${user.accessToken}`,
+          // authorization: `Bearer ${user.accessToken}`, // This line use for firebase sdk
+          authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
         .then((res) => res.json())

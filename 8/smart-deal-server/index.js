@@ -1,3 +1,5 @@
+// We use fireabse SDK and jwt token on mybids route
+
 const express = require("express");
 const cors = require("cors");
 const dns = require("dns");
@@ -6,6 +8,7 @@ const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const admin = require("firebase-admin");
+const jwt = require("jsonwebtoken");
 
 const serviceAccount = require("./key.json");
 
@@ -36,6 +39,25 @@ const verifyFireBaseToken = async (req, res, next) => {
   }
 };
 
+const verifyJWT = async (req, res, next) => {
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: "Unauthorize Access" });
+  }
+  const token = req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorize Access" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Unauthorize Access" });
+    }
+
+    req.token_email = decoded.email;
+    next();
+  });
+};
+
 // Force Google DNS
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
@@ -59,6 +81,18 @@ async function run() {
     const bidsCollections = db.collection("bids");
 
     // All API will be written here
+
+    // JWT TOKEN
+    app.post("/getToken", (req, res) => {
+      const loggedUser = req.body;
+
+      const token = jwt.sign(loggedUser, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      res.send({ token: token });
+    });
+
     // Products API
     // Latest Product
     app.get("/latest-products", async (req, res) => {
@@ -137,14 +171,15 @@ async function run() {
     });
 
     // Bids Related API will be written here
-    app.get("/bids", verifyFireBaseToken, async (req, res) => {
+    // app.get("/bids", verifyFireBaseToken, async (req, res) => {
+    app.get("/bids", verifyJWT, async (req, res) => {
       const query = {};
 
       if (req.query.email) {
         if (req.query.email !== req.token_email) {
           return res.status(401).send({ message: "Unauthorize Access" });
         }
-        
+
         query.buyer_email = req.query.email;
       }
 
