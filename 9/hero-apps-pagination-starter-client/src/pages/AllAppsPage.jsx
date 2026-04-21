@@ -7,11 +7,13 @@ const AllAppsPage = () => {
   const [totalApps, setTotalApps] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [sort, setSort] = useState("size");
+  const [order, setOrder] = useState("");
   const limit = 10;
 
   useEffect(() => {
     fetch(
-      `http://localhost:5000/apps?limit=${limit}&skip=${currentPage * limit}`,
+      `http://localhost:5000/apps?limit=${limit}&skip=${currentPage * limit}&sort=${sort}&order=${order}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -20,7 +22,13 @@ const AllAppsPage = () => {
         const pages = Math.ceil(data.total / limit);
         setTotalPages(pages);
       });
-  }, [currentPage]);
+  }, [currentPage, sort, order]);
+
+  const handleChange = (e) => {
+    const sortText = e.target.value;
+    setSort(sortText.split("-")[0]);
+    setOrder(sortText.split("-")[1]);
+  };
 
   return (
     <div>
@@ -66,7 +74,7 @@ const AllAppsPage = () => {
         </form>
 
         <div className="">
-          <select className="select bg-white">
+          <select onChange={handleChange} className="select bg-white">
             <option selected disabled={true}>
               Sort by <span className="text-xs">R / S / D</span>
             </option>
@@ -119,13 +127,12 @@ const AllAppsPage = () => {
         }
         {currentPage < totalPages - 1 && (
           <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          className="btn btn-primary"
-        >
-          Next
-        </button>
+            onClick={() => setCurrentPage(currentPage + 1)}
+            className="btn btn-primary"
+          >
+            Next
+          </button>
         )}
-        
       </div>
     </div>
   );
