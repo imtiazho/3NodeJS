@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 5000;
 const dns = require("dns");
+require("dotenv").config();
 
 // Middleware
 app.use(cors());
@@ -12,8 +13,7 @@ app.use(express.json());
 // Force Google DNS
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-const uri =
-  "mongodb+srv://simpleDbUser:xoTdIamyidcBXmNR@cluster0.ab3rgue.mongodb.net/?appName=Cluster0";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ab3rgue.mongodb.net/?appName=Cluster0`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -69,8 +69,8 @@ async function run() {
       res.send(result);
     });
 
-    await client.db("admin").command({ ping: 1 });
-    console.log("Successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Successfully connected to MongoDB!");
   } finally {
     // await client.close();
   }
